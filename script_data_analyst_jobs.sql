@@ -49,8 +49,10 @@ SELECT location As state,ROUND(AVG(star_rating),2) AS avg_rating
 FROM data_analyst_jobs
 WHERE star_rating IS NOT NULL
 GROUP BY location
-ORDER BY avg_rating DESC
-LIMIT 1;
+ORDER BY avg_rating DESC;
+
+
+
 
 
 
@@ -61,7 +63,7 @@ FROM data_analyst_jobs;
 
 ---8.How many unique job titles are there for California companies?--230
 
-SELECT COUNT (DISTINCT title) 
+SELECT COUNT (DISTINCT title) As CA_companies 
 FROM data_analyst_jobs
 WHERE location ='CA'
 
@@ -81,13 +83,13 @@ FROM data_analyst_jobs
 WHERE review_count>5000
 AND company IS NOT NULL
 GROUP BY company
-ORDER BY avg_rating DESC
-LIMIT 1;
+ORDER BY avg_rating DESC;
 
 
----11.Find all the job titles that contain the word ‘Analyst’.?-- 1669
+
+---11.Find all the job titles that contain the word ‘Analyst’.?-- 774
 -- How many different job titles are there? 
-SELECT title
+SELECT COUNT(DISTINCT title)
 FROM data_analyst_jobs
 WHERE title ILIKE '%Analyst%'
 
@@ -97,7 +99,28 @@ FROM data_analyst_jobs
 WHERE title ILIKE '%Analyst%'
 
 --12.How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’? What word do these positions have in common?
+SELECT * 
+FROM data_analyst_jobs;
 
+SELECT title
+FROM data_analyst_jobs
+WHERE title NOT ILIKE '%analyst%' AND title NOT ILIKE '%analytics%';
+
+
+--**BONUS:**
+--You want to understand which jobs requiring SQL are hard to fill. Find the number of jobs by industry (domain) that require SQL and have been posted longer than 3 weeks. 
+-- Disregard any postings where the domain is NULL. 
+-- Order your results so that the domain with the greatest number of `hard to fill` jobs is at the top. 
+-- Which three industries are in the top 4 on this list? How many jobs have been listed for more than 3 weeks for each of the top 4?
+
+
+SELECT domain,COUNT (title) AS no_of_jobs_hard_fill
+FROM data_analyst_jobs
+WHERE skill LIKE '%SQL%' AND domain IS NOT NULL
+AND days_since_posting >21
+GROUP BY domain
+ORDER BY no_of_jobs_hard_fill DESC
+LIMIT 4;
 
 
 
